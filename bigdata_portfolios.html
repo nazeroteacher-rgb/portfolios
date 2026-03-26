@@ -1,0 +1,105 @@
+// ── GitHub 설정 (선생님 계정 정보로 수정 필요) ──
+const GH_CONFIG = {
+  owner: 'YOUR_GITHUB_ID',
+  repo: 'YOUR_REPO_NAME',
+  token: 'YOUR_GITHUB_TOKEN', // 주의: 보안상 서버 없이 노출됨
+  branch: 'main'
+};
+
+// GitHub에 파일 업로드하는 함수
+async function uploadToGithub(studentId, newData) {
+  const fileName = `data/${studentId}.json`;
+  const url = `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${fileName}`;
+  
+  try {
+    // 1. 기존 파일이 있는지 확인 (SHA 값이 필요함)
+    let sha = null;
+    const getRes = await fetch(url, {
+      headers: { 'Authorization': `token ${GH_CONFIG.token}` }
+    });
+    
+    let currentContent = [];
+    if (getRes.ok) {
+      const data = await getRes.json();
+      sha = data.sha;
+      // 기존 데이터 복원
+      currentContent = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+    }
+
+    // 2. 새 데이터 추가
+    currentContent.unshift(newData);
+
+    // 3. GitHub에 Push
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GH_CONFIG.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: `Update portfolio for ${studentId}`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(currentContent, null, 2)))),
+        sha: sha, // 기존 파일이 없으면 null, 있으면 필수
+        branch: GH_CONFIG.branch
+      })
+    });
+
+    if (putRes.ok) {
+      alert('GitHub 저장 성공!');
+      return true;
+    } else {
+      const err = await putRes.json();
+      throw new Error(err.message);
+    }
+  } catch (e) {
+    console.error(e);
+    alert('저장 실패: ' + e.message);
+    return false;
+  }
+}
+
+// ── 수정된 저장 함수 (TEXT) ──
+async function saveText() {
+  const date = document.getElementById('tDate').value;
+  const title = document.getElementById('tTitle').value.trim();
+  const content = document.getElementById('tContent').value.trim();
+  
+  if (!date || !title) { alert('날짜와 제목은 필수입니다!'); return; }
+
+  const newData = { 
+    id: Date.now(), type: 'text', date, subject: '기록', 
+    title, content, images: [...pendingImages] 
+  };
+
+  const success = await uploadToGithub(currentUser, newData);
+  if (success) {
+    if (!portfolios[currentUser]) portfolios[currentUser] = [];
+    portfolios[currentUser].unshift(newData);
+    clearTextForm(); hideAllForms(); render();
+  }
+}
+
+// ── 수정된 저장 함수 (PYTHON) ──
+async function savePython() {
+  const date = document.getElementById('pDate').value;
+  const title = document.getElementById('pTitle').value.trim();
+  const desc = document.getElementById('pDesc').value.trim();
+  const code = document.getElementById('pyCodeInput').value.trim();
+  
+  if (!date || !title || !code) { alert('필수 항목을 입력하세요!'); return; }
+
+  const outEl = document.getElementById('pyOutput');
+  const newData = {
+    id: Date.now(), type: 'python', date, subject: '파이썬', 
+    title, desc, code, 
+    savedOutput: outEl.textContent, isErr: outEl.classList.contains('error'), 
+    images: []
+  };
+
+  const success = await uploadToGithub(currentUser, newData);
+  if (success) {
+    if (!portfolios[currentUser]) portfolios[currentUser] = [];
+    portfolios[currentUser].unshift(newData);
+    clearPyForm(); hideAllForms(); render();
+  }
+}
