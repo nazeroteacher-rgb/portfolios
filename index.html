@@ -606,29 +606,101 @@ function runCode(){
     out.textContent=output.length?output.join('\n'):'(출력 없음)';
   }catch(e){out.className='error';out.textContent='❌ 오류: '+e.message;}
 }
-function pySimulate(code,log){
-  let js=code
-    .replace(/^#.*$/gm,'')
-    .replace(/print\((.*?)\)/g,'__log($1)')
-    .replace(/True/g,'true').replace(/False/g,'false').replace(/None/g,'null')
-    .replace(/elif /g,'else if ').replace(/and /g,'&& ').replace(/or /g,'|| ')
-    .replace(/not (\w+)/g,'!$1')
-    .replace(/def (\w+)\((.*?)\):/g,'function $1($2){')
-    .replace(/for (\w+) in range\((\d+),\s*(\d+)(?:,\s*(\d+))?\):/g,(m,v,s,e,st)=>`for(let ${v}=${s};${v}<${e};${v}+=${st||1}){`)
-    .replace(/for (\w+) in range\((\d+)\):/g,(m,v,e)=>`for(let ${v}=0;${v}<${e};${v}++){`)
-    .replace(/for (\w+) in (\w+):/g,'for(let $1 of $2){')
-    .replace(/while (.+):/g,'while($1){')
-    .replace(/if (.+):/g,'if($1){')
-    .replace(/else:/g,'} else {');
-  const lines=js.split('\n'),result=[];let prev=0;
-  for(const line of lines){
-    const tr=line.trimStart();if(!tr){result.push('');continue;}
-    const ind=line.length-tr.length;
-    if(ind<prev)for(let i=0;i<Math.floor((prev-ind)/2);i++)result.push('}');
-    result.push(tr);prev=ind;
+function pySimulate(code, log) {
+  const lines = code.split('\n');
+  const result = [];
+  const indentStack = [0];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trimStart();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+
+    const indent = line.length - trimmed.length;
+    const prevIndent = indentStack[indentStack.length - 1];
+
+    // 들여쓰기 감소 → 블록 닫기
+    if (indent < prevIndent) {
+      while (indentStack[indentStack.length - 1] > indent) {
+        indentStack.pop();
+        result.push('}');
+      }
+    }
+
+    // 파이썬 → JS 변환
+    let js = trimmed
+      .replace(/True/g, 'true').replace(/False/g, 'false').replace(/None/g, 'null')
+      .replace(/and\b/g, '&&').replace(/\bor\b/g, '||').replace(/\bnot\b/g, '!')
+      .replace(/\*\*/g, '**')
+      .replace(/print\((.+)\)/g, (_, a) => `__log(${a})`);
+
+    // 블록 문 처리
+    const forRange2 = js.match(/^for\s+(\w+)\s+in\s+range\((.+),\s*(.+)\):/);
+    const forRange1 = js.match(/^for\s+(\w+)\s+in\s+range\((.+)\):/);
+    const forIn    = js.match(/^for\s+(\w+)\s+in\s+(.+):/);
+    const whileM   = js.match(/^while\s+(.+):/);
+    const ifM      = js.match(/^if\s+(.+):/);
+    const elifM    = js.match(/^elif\s+(.+):/);
+    const elseM    = /^else\s*:/.test(js);
+    const defM     = js.match(/^def\s+(\w+)\s*\((.*)\)\s*:/);
+
+    let converted = '';
+    let isBlock = false;
+
+    if (defM) {
+      converted = `function ${defM[1]}(${defM[2]}) {`;
+      isBlock = true;
+    } else if (forRange2) {
+      converted = `for (let ${forRange2[1]} = ${forRange2[2].trim()}; ${forRange2[1]} < ${forRange2[3].trim()}; ${forRange2[1]}++) {`;
+      isBlock = true;
+    } else if (forRange1) {
+      converted = `for (let ${forRange1[1]} = 0; ${forRange1[1]} < ${forRange1[2].trim()}; ${forRange1[1]}++) {`;
+      isBlock = true;
+    } else if (forIn) {
+      converted = `for (let ${forIn[1]} of ${forIn[2].trim()}) {`;
+      isBlock = true;
+    } else if (whileM) {
+      converted = `while (${whileM[1].trim()}) {`;
+      isBlock = true;
+    } else if (ifM) {
+      converted = `if (${ifM[1].trim()}) {`;
+      isBlock = true;
+    } else if (elifM) {
+      result.push('} else if (' + elifM[1].trim() + ') {');
+      indentStack.push(indent + 1);
+      continue;
+    } else if (elseM) {
+      result.push('} else {');
+      indentStack.push(indent + 1);
+      continue;
+    } else {
+      // 일반 구문: 변수 선언 처리
+      converted = js
+        .replace(/^(\w+)\s*=\s*(.+)$/, (m, v, val) => {
+          const declared = result.some(r => r.includes(`let ${v}`) || r.includes(`var ${v}`));
+          return declared ? `${v} = ${val}` : `let ${v} = ${val}`;
+        });
+    }
+
+    result.push(converted);
+
+    if (isBlock) {
+      indentStack.push(indent + 1);
+    }
   }
-  if(prev>0)for(let i=0;i<Math.floor(prev/2);i++)result.push('}');
-  new Function('__log',result.join('\n'))(log);
+
+  // 남은 블록 닫기
+  while (indentStack.length > 1) {
+    indentStack.pop();
+    result.push('}');
+  }
+
+  const finalCode = result.join('\n');
+  try {
+    new Function('__log', finalCode)(log);
+  } catch(e) {
+    throw new Error(e.message + '\n\n[변환된 코드]\n' + finalCode);
+  }
 }
 async function savePython(){
   const date=document.getElementById('pDate').value;
