@@ -1,105 +1,596 @@
-// ── GitHub 설정 (선생님 계정 정보로 수정 필요) ──
-const GH_CONFIG = {
-  owner: 'YOUR_GITHUB_ID',
-  repo: 'YOUR_REPO_NAME',
-  token: 'YOUR_GITHUB_TOKEN', // 주의: 보안상 서버 없이 노출됨
-  branch: 'main'
-};
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학습 포트폴리오 빌더</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --primary:#6366f1;--primary-light:#e0e7ff;
+  --bg:#f8fafc;--card:#fff;--text:#1e293b;
+  --muted:#64748b;--border:#e2e8f0;
+  --danger:#ef4444;--success:#10b981;
+  --py:#3b82f6;--py-light:#dbeafe;
+}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-// GitHub에 파일 업로드하는 함수
-async function uploadToGithub(studentId, newData) {
-  const fileName = `data/${studentId}.json`;
-  const url = `https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${fileName}`;
-  
+/* hljs 인라인 테마 */
+.hljs{background:#282c34;color:#abb2bf;padding:14px!important;border-radius:0;}
+.hljs-comment,.hljs-quote{color:#5c6370;font-style:italic}
+.hljs-keyword,.hljs-formula{color:#c678dd}
+.hljs-string,.hljs-addition{color:#98c379}
+.hljs-number,.hljs-variable{color:#d19a66}
+.hljs-built_in,.hljs-title.class_{color:#e6c07b}
+.hljs-literal{color:#56b6c2}
+.hljs-title{color:#61aeee}
+
+/* LOGIN */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6366f1,#8b5cf6);}
+.login-box{background:#fff;border-radius:20px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.2);text-align:center;}
+.logo{font-size:2.6rem;margin-bottom:8px;}
+.login-box h1{font-size:1.3rem;font-weight:800;margin-bottom:4px;}
+.login-box>p{font-size:.82rem;color:var(--muted);margin-bottom:28px;}
+.login-field{text-align:left;margin-bottom:14px;}
+.login-field label{font-size:.78rem;font-weight:700;color:var(--muted);display:block;margin-bottom:5px;}
+.login-field input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;transition:border .2s;}
+.login-field input:focus{outline:none;border-color:var(--primary);}
+.login-err{color:var(--danger);font-size:.8rem;margin-bottom:10px;min-height:18px;}
+.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;}
+.btn-login:hover{opacity:.88;}
+.login-hint{margin-top:16px;font-size:.75rem;color:var(--muted);}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--primary),#8b5cf6);color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(99,102,241,.3);}
+header h1{font-size:1.15rem;font-weight:700;}
+header p{font-size:.78rem;opacity:.85;margin-top:2px;}
+.header-right{display:flex;gap:8px;align-items:center;}
+.user-badge{background:rgba(255,255,255,.2);border-radius:20px;padding:5px 12px;font-size:.8rem;font-weight:600;}
+.btn{padding:7px 14px;border-radius:8px;border:none;cursor:pointer;font-size:.82rem;font-weight:600;transition:all .2s;}
+.btn-white{background:#fff;color:var(--primary);}
+.btn-white:hover{background:#ede9fe;}
+.btn-outline{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.4);}
+.btn-outline:hover{background:rgba(255,255,255,.25);}
+
+#appScreen{display:none;}
+.container{max-width:960px;margin:0 auto;padding:24px 16px;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.stat-card{background:var(--card);border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);}
+.stat-num{font-size:2rem;font-weight:700;color:var(--primary);}
+.stat-label{font-size:.75rem;color:var(--muted);margin-top:2px;}
+
+/* ADD TYPE */
+.add-type-bar{display:flex;gap:10px;margin-bottom:24px;}
+.add-type-btn{flex:1;padding:14px;border-radius:14px;border:2px solid var(--border);background:var(--card);cursor:pointer;text-align:center;transition:all .2s;font-size:.88rem;font-weight:600;color:var(--muted);}
+.add-type-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.add-type-btn.active-text{border-color:var(--primary);background:var(--primary-light);color:var(--primary);}
+.add-type-btn.active-py{border-color:var(--py);background:var(--py-light);color:var(--py);}
+.add-type-btn .icon{font-size:1.5rem;display:block;margin-bottom:4px;}
+
+/* FORMS */
+.add-form{background:var(--card);border-radius:16px;padding:22px;margin-bottom:24px;border:1px solid var(--border);}
+.add-form h2{font-size:.95rem;font-weight:700;margin-bottom:14px;}
+.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+.form-group label{font-size:.76rem;font-weight:600;color:var(--muted);}
+.form-group input,.form-group textarea{padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:.86rem;color:var(--text);background:var(--bg);font-family:inherit;transition:border .2s;}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);background:#fff;}
+.form-group textarea{resize:vertical;min-height:375px;}
+.image-upload-area{border:2px dashed var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;position:relative;background:var(--bg);transition:all .2s;}
+.image-upload-area:hover{border-color:var(--primary);background:var(--primary-light);}
+.image-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.image-upload-area p{font-size:.8rem;color:var(--muted);}
+.image-preview-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.image-preview-item{position:relative;}
+.image-preview-item img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--border);}
+.img-del{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px;}
+.btn-primary{background:var(--primary);color:#fff;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.88rem;font-weight:700;}
+.btn-primary:hover{background:#4f46e5;}
+.btn-py-primary{background:var(--py);color:#fff;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.88rem;font-weight:700;}
+.btn-py-primary:hover{background:#2563eb;}
+.btn-secondary{background:var(--bg);color:var(--muted);padding:9px 16px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;font-size:.85rem;font-weight:600;}
+
+/* PYTHON EDITOR */
+.py-editor-wrap{border-radius:10px;overflow:hidden;border:1.5px solid var(--py);margin-bottom:12px;}
+.py-editor-header{background:#1e293b;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;}
+.py-editor-header span{color:#94a3b8;font-size:.78rem;font-family:monospace;}
+.py-editor-header button{background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:.75rem;cursor:pointer;font-weight:600;}
+.py-editor-header button:hover{background:#2563eb;}
+#pyCodeInput{width:100%;min-height:160px;padding:14px;background:#282c34;color:#abb2bf;font-family:'Courier New',monospace;font-size:.85rem;border:none;resize:vertical;outline:none;line-height:1.6;}
+.py-output-wrap{background:#1a1a2e;border-radius:10px;border:1.5px solid #334155;overflow:hidden;margin-bottom:12px;}
+.py-output-header{background:#0f172a;padding:7px 14px;display:flex;align-items:center;gap:8px;}
+.py-output-header span{color:#64748b;font-size:.76rem;font-family:monospace;}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot-r{background:#ef4444;}.dot-y{background:#f59e0b;}.dot-g{background:#10b981;}
+#pyOutput{padding:12px 14px;min-height:60px;font-family:'Courier New',monospace;font-size:.83rem;color:#e2e8f0;white-space:pre-wrap;line-height:1.6;}
+#pyOutput.error{color:#f87171;}
+#pyOutput.success{color:#6ee7b7;}
+.py-run-btn{width:100%;padding:10px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;margin-bottom:12px;}
+.py-run-btn:hover{opacity:.88;}
+
+/* FILTER */
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.filter-bar span{font-size:.8rem;color:var(--muted);font-weight:600;}
+.filter-btn{padding:5px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:.78rem;cursor:pointer;transition:all .2s;}
+.filter-btn.active,.filter-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
+
+/* RECORDS */
+.records{display:grid;gap:12px;}
+.record-card{background:var(--card);border-radius:14px;padding:16px;border:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.03);}
+.record-card.py-card{border-left:3px solid var(--py);}
+.record-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.record-meta{display:flex;gap:7px;flex-wrap:wrap;}
+.badge{padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:600;}
+.badge-subject{background:var(--primary-light);color:var(--primary);}
+.badge-date{background:#f1f5f9;color:var(--muted);}
+.badge-py{background:var(--py-light);color:var(--py);}
+.btn-icon{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:.78rem;color:var(--muted);}
+.btn-icon:hover{background:var(--danger);color:#fff;border-color:var(--danger);}
+.record-title{font-size:.97rem;font-weight:700;margin-bottom:5px;}
+.record-content{font-size:.85rem;color:var(--muted);line-height:1.6;white-space:pre-wrap;}
+.record-images{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.record-images img{width:88px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:transform .2s;}
+.record-images img:hover{transform:scale(1.05);}
+
+/* SAVED CODE */
+.saved-code-wrap{margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #334155;}
+.saved-code-header{background:#1e293b;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;}
+.saved-code-header span{color:#94a3b8;font-size:.75rem;font-family:monospace;}
+.saved-code-header button{background:#334155;color:#94a3b8;border:none;border-radius:5px;padding:3px 10px;font-size:.72rem;cursor:pointer;}
+.saved-code-header button:hover{background:#3b82f6;color:#fff;}
+.saved-code-wrap pre{margin:0!important;border-radius:0!important;}
+.saved-code-wrap code{font-size:.8rem!important;}
+.saved-output{background:#0f172a;padding:8px 12px;font-family:'Courier New',monospace;font-size:.78rem;color:#6ee7b7;white-space:pre-wrap;border-top:1px solid #1e293b;}
+.saved-output.err{color:#f87171;}
+
+/* EMPTY */
+.empty{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty .icon{font-size:2.8rem;margin-bottom:10px;}
+
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:85vh;border-radius:10px;}
+.lightbox-close{position:absolute;top:20px;right:28px;color:#fff;font-size:2rem;cursor:pointer;}
+
+/* PRINT */
+@media print{
+  #loginScreen{display:none!important;}
+  #appScreen{display:block!important;}
+  header{background:#6366f1!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .header-right,.add-type-bar,.add-form,.filter-bar,.btn-icon,.py-run-btn{display:none!important;}
+  .saved-code-header button{display:none!important;}
+  body{background:#fff!important;}
+  .container{padding:12px!important;}
+  .record-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ddd!important;margin-bottom:14px;}
+  .saved-code-wrap pre{background:#282c34!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .badge-py{background:#dbeafe!important;color:#3b82f6!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .badge-subject{background:#e0e7ff!important;color:#6366f1!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .stats{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+@media(max-width:600px){.add-type-bar{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="logo">📚</div>
+    <h1>학습 포트폴리오</h1>
+    <p>학번과 비밀번호를 입력해 주세요</p>
+    <div class="login-field">
+      <label>🎓 학번</label>
+      <input type="text" id="inputId" placeholder="예) 3102" maxlength="4" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <div class="login-field">
+      <label>🔒 비밀번호</label>
+      <input type="password" id="inputPw" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <button class="btn-login" onclick="login()">로그인</button>
+    <p class="login-hint">초기 비밀번호는 학번과 동일합니다</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <header>
+    <div>
+      <h1>📚 학습 포트폴리오 빌더</h1>
+      <p id="headerSub"></p>
+    </div>
+    <div class="header-right">
+      <span class="user-badge" id="userBadge"></span>
+      <button class="btn btn-outline" onclick="printPortfolio()">🖨️ PDF 출력</button>
+      <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">총 학습 기록</div></div>
+      <div class="stat-card"><div class="stat-num" id="statSubjects">0</div><div class="stat-label">과목 수</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPy">0</div><div class="stat-label">파이썬 코드</div></div>
+    </div>
+
+    <div class="add-type-bar">
+      <button class="add-type-btn" id="btnAddText" onclick="showForm('text')">
+        <span class="icon">📝</span>글 내용 추가하기
+      </button>
+      <button class="add-type-btn" id="btnAddPy" onclick="showForm('python')">
+        <span class="icon">🐍</span>파이썬 코드 추가하기
+      </button>
+    </div>
+
+    <!-- TEXT FORM -->
+    <div class="add-form" id="textForm" style="display:none">
+      <h2 style="color:var(--primary)">📝 글 내용 추가</h2>
+      <div class="form-group">
+        <label>📅 수업 날짜</label>
+        <input type="date" id="tDate">
+      </div>
+      <div class="form-group">
+        <label>📝 수업 제목</label>
+        <input type="text" id="tTitle" placeholder="예) 오늘 배운 핵심 내용">
+      </div>
+      <div class="form-group">
+        <label>💡 학습 내용</label>
+        <textarea id="tContent" placeholder="오늘 배운 내용, 핵심 개념, 느낀 점..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>🖼️ 이미지 첨부</label>
+        <div class="image-upload-area">
+          <input type="file" accept="image/*" multiple onchange="handleImg(event)">
+          <p>📎 클릭하거나 이미지를 드래그해서 첨부</p>
+          <p style="font-size:.73rem;margin-top:3px">JPG, PNG 등 여러 장 가능</p>
+        </div>
+        <div class="image-preview-wrap" id="imgPreview"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-secondary" onclick="clearTextForm()">초기화</button>
+        <button class="btn-primary" onclick="saveText()">💾 저장하기</button>
+      </div>
+    </div>
+
+    <!-- PYTHON FORM -->
+    <div class="add-form" id="pyForm" style="display:none">
+      <h2 style="color:var(--py)">🐍 파이썬 코드 추가</h2>
+      <div class="form-group">
+        <label>📅 수업 날짜</label>
+        <input type="date" id="pDate">
+      </div>
+      <div class="form-group">
+        <label>📝 코드 제목</label>
+        <input type="text" id="pTitle" placeholder="예) 반복문 연습, 리스트 정렬...">
+      </div>
+      <div class="form-group">
+        <label>💡 코드 설명</label>
+        <textarea id="pDesc" placeholder="이 코드가 무엇을 하는지 설명해 주세요..." style="min-height:80px"></textarea>
+      </div>
+      <label style="font-size:.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;">🐍 파이썬 코드</label>
+      <div class="py-editor-wrap">
+        <div class="py-editor-header">
+          <span>🐍 Python</span>
+          <button onclick="runCode()">▶ 실행</button>
+        </div>
+        <textarea id="pyCodeInput" spellcheck="false" placeholder="# 파이썬 코드를 여기에 붙여넣기 하세요&#10;print('Hello, World!')"></textarea>
+      </div>
+      <div class="py-output-wrap">
+        <div class="py-output-header">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span>Output</span>
+        </div>
+        <div id="pyOutput">실행 버튼을 눌러 결과를 확인하세요.</div>
+      </div>
+      <button class="py-run-btn" onclick="runCode()">▶ 코드 실행하기</button>
+      <div class="form-actions">
+        <button class="btn-secondary" onclick="clearPyForm()">초기화</button>
+        <button class="btn-py-primary" onclick="savePython()">💾 코드 저장하기</button>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+      <span>필터:</span>
+      <button class="filter-btn active" onclick="setFilter('전체',this)">전체</button>
+      <button class="filter-btn" onclick="setFilter('__py__',this)">🐍 파이썬만</button>
+      <div id="subjectFilters" style="display:contents"></div>
+    </div>
+
+    <div class="records" id="recordList"></div>
+    <div class="empty" id="emptyState" style="display:none">
+      <div class="icon">📖</div>
+      <p>아직 학습 기록이 없어요.<br>위 버튼으로 첫 기록을 추가해 보세요!</p>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">✕</span>
+  <img id="lightboxImg" src="">
+</div>
+
+<script>
+// ── 학생 명단 ──
+const STUDENTS = {};
+[3102,3116,3121,3122,3205,3215,3216,3219,3229,3230,3232,
+ 3603,3606,3609,3613,3614,3616,3617,3619,3620,3621,3623,3624,3630
+].forEach(id => {
+  const s = String(id), cls = Math.floor((id-3000)/100), num = id%100;
+  STUDENTS[s] = { pw:s, name:`${cls}반 ${num}번`, role:'student' };
+});
+STUDENTS['1111'] = { pw:'1111', name:'선생님', role:'teacher' };
+
+const portfolios = {};
+for (const id in STUDENTS) portfolios[id] = [];
+
+let currentUser = null, pendingImages = [], currentFilter = '전체';
+
+// ── LOGIN ──
+function login() {
+  const id = document.getElementById('inputId').value.trim();
+  const pw = document.getElementById('inputPw').value;
+  const err = document.getElementById('loginErr');
+  if (!STUDENTS[id]) { err.textContent = '존재하지 않는 학번입니다.'; return; }
+  if (STUDENTS[id].pw !== pw) { err.textContent = '비밀번호가 올바르지 않습니다.'; return; }
+  currentUser = id; err.textContent = '';
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  document.getElementById('userBadge').textContent = `🎓 ${id} · ${STUDENTS[id].name}`;
+  document.getElementById('headerSub').textContent = `${STUDENTS[id].name}의 학습 포트폴리오`;
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('tDate').value = today;
+  document.getElementById('pDate').value = today;
+  render();
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('inputId').value = '';
+  document.getElementById('inputPw').value = '';
+  hideAllForms(); currentFilter = '전체';
+}
+
+// ── FORMS ──
+function showForm(type) {
+  hideAllForms();
+  if (type === 'text') {
+    document.getElementById('textForm').style.display = 'block';
+    document.getElementById('btnAddText').classList.add('active-text');
+  } else {
+    document.getElementById('pyForm').style.display = 'block';
+    document.getElementById('btnAddPy').classList.add('active-py');
+  }
+}
+function hideAllForms() {
+  document.getElementById('textForm').style.display = 'none';
+  document.getElementById('pyForm').style.display = 'none';
+  document.getElementById('btnAddText').className = 'add-type-btn';
+  document.getElementById('btnAddPy').className = 'add-type-btn';
+}
+
+// ── IMAGE ──
+function handleImg(e) {
+  Array.from(e.target.files).forEach(f => {
+    const r = new FileReader();
+    r.onload = ev => { pendingImages.push({ dataUrl: ev.target.result, name: f.name }); renderPending(); };
+    r.readAsDataURL(f);
+  }); e.target.value = '';
+}
+function renderPending() {
+  document.getElementById('imgPreview').innerHTML = pendingImages.map((img,i) => `
+    <div class="image-preview-item">
+      <img src="${img.dataUrl}">
+      <button class="img-del" onclick="removePending(${i})">✕</button>
+    </div>`).join('');
+}
+function removePending(i) { pendingImages.splice(i,1); renderPending(); }
+
+// ── SAVE TEXT ──
+function saveText() {
   try {
-    // 1. 기존 파일이 있는지 확인 (SHA 값이 필요함)
-    let sha = null;
-    const getRes = await fetch(url, {
-      headers: { 'Authorization': `token ${GH_CONFIG.token}` }
-    });
-    
-    let currentContent = [];
-    if (getRes.ok) {
-      const data = await getRes.json();
-      sha = data.sha;
-      // 기존 데이터 복원
-      currentContent = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-    }
-
-    // 2. 새 데이터 추가
-    currentContent.unshift(newData);
-
-    // 3. GitHub에 Push
-    const putRes = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${GH_CONFIG.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: `Update portfolio for ${studentId}`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(currentContent, null, 2)))),
-        sha: sha, // 기존 파일이 없으면 null, 있으면 필수
-        branch: GH_CONFIG.branch
-      })
-    });
-
-    if (putRes.ok) {
-      alert('GitHub 저장 성공!');
-      return true;
-    } else {
-      const err = await putRes.json();
-      throw new Error(err.message);
-    }
-  } catch (e) {
-    console.error(e);
-    alert('저장 실패: ' + e.message);
-    return false;
-  }
-}
-
-// ── 수정된 저장 함수 (TEXT) ──
-async function saveText() {
-  const date = document.getElementById('tDate').value;
-  const title = document.getElementById('tTitle').value.trim();
-  const content = document.getElementById('tContent').value.trim();
-  
-  if (!date || !title) { alert('날짜와 제목은 필수입니다!'); return; }
-
-  const newData = { 
-    id: Date.now(), type: 'text', date, subject: '기록', 
-    title, content, images: [...pendingImages] 
-  };
-
-  const success = await uploadToGithub(currentUser, newData);
-  if (success) {
+    const dateEl = document.getElementById('tDate');
+    const titleEl = document.getElementById('tTitle');
+    const contentEl = document.getElementById('tContent');
+    if (!dateEl || !titleEl || !contentEl) { alert('폼 요소를 찾을 수 없습니다.'); return; }
+    const date = dateEl.value;
+    const title = titleEl.value.trim();
+    const content = contentEl.value.trim();
+    if (!date || !title) { alert('날짜와 제목은 필수입니다!'); return; }
     if (!portfolios[currentUser]) portfolios[currentUser] = [];
-    portfolios[currentUser].unshift(newData);
+    portfolios[currentUser].unshift({ id:Date.now(), type:'text', date, subject:'기록', title, content, images:[...pendingImages] });
     clearTextForm(); hideAllForms(); render();
+  } catch(e) { alert('저장 중 오류: ' + e.message); }
+}
+function clearTextForm() {
+  const t = document.getElementById('tTitle');
+  const c = document.getElementById('tContent');
+  const d = document.getElementById('tDate');
+  if (t) t.value = '';
+  if (c) c.value = '';
+  if (d) d.value = new Date().toISOString().split('T')[0];
+  pendingImages = []; renderPending();
+}
+
+// ── PYTHON RUNNER ──
+function runCode() {
+  const code = document.getElementById('pyCodeInput').value;
+  const out = document.getElementById('pyOutput');
+  out.className = ''; out.textContent = '실행 중...';
+  try {
+    const output = [];
+    const _log = (...a) => output.push(a.map(String).join(' '));
+    pySimulate(code, _log);
+    out.className = 'success';
+    out.textContent = output.length ? output.join('\n') : '(출력 없음)';
+  } catch(e) {
+    out.className = 'error';
+    out.textContent = '❌ 오류: ' + e.message;
   }
 }
 
-// ── 수정된 저장 함수 (PYTHON) ──
-async function savePython() {
-  const date = document.getElementById('pDate').value;
-  const title = document.getElementById('pTitle').value.trim();
-  const desc = document.getElementById('pDesc').value.trim();
-  const code = document.getElementById('pyCodeInput').value.trim();
-  
-  if (!date || !title || !code) { alert('필수 항목을 입력하세요!'); return; }
+function pySimulate(code, log) {
+  let js = code
+    .replace(/^#.*$/gm, '')
+    .replace(/print\((.*?)\)/g, '__log($1)')
+    .replace(/True/g,'true').replace(/False/g,'false').replace(/None/g,'null')
+    .replace(/elif /g,'else if ').replace(/and /g,'&& ').replace(/or /g,'|| ')
+    .replace(/not (\w+)/g,'!$1')
+    .replace(/def (\w+)\((.*?)\):/g,'function $1($2){')
+    .replace(/for (\w+) in range\((\d+),\s*(\d+)(?:,\s*(\d+))?\):/g,(m,v,s,e,st)=>`for(let ${v}=${s};${v}<${e};${v}+=${st||1}){`)
+    .replace(/for (\w+) in range\((\d+)\):/g,(m,v,e)=>`for(let ${v}=0;${v}<${e};${v}++){`)
+    .replace(/for (\w+) in (\w+):/g,'for(let $1 of $2){')
+    .replace(/while (.+):/g,'while($1){')
+    .replace(/if (.+):/g,'if($1){')
+    .replace(/else:/g,'} else {');
 
-  const outEl = document.getElementById('pyOutput');
-  const newData = {
-    id: Date.now(), type: 'python', date, subject: '파이썬', 
-    title, desc, code, 
-    savedOutput: outEl.textContent, isErr: outEl.classList.contains('error'), 
-    images: []
-  };
+  const lines = js.split('\n');
+  const result = []; let prevIndent = 0;
+  for (let line of lines) {
+    const trimmed = line.trimStart();
+    if (!trimmed) { result.push(''); continue; }
+    const indent = line.length - trimmed.length;
+    if (indent < prevIndent) {
+      const diff = Math.floor((prevIndent - indent) / 2);
+      for (let i=0;i<diff;i++) result.push('}');
+    }
+    result.push(trimmed);
+    prevIndent = indent;
+  }
+  if (prevIndent > 0) for (let i=0;i<Math.floor(prevIndent/2);i++) result.push('}');
+  const fn = new Function('__log', result.join('\n'));
+  fn(log);
+}
 
-  const success = await uploadToGithub(currentUser, newData);
-  if (success) {
+// ── SAVE PYTHON ──
+function savePython() {
+  try {
+    const dateEl = document.getElementById('pDate');
+    const titleEl = document.getElementById('pTitle');
+    const descEl = document.getElementById('pDesc');
+    const codeEl = document.getElementById('pyCodeInput');
+    const outEl = document.getElementById('pyOutput');
+    if (!dateEl || !titleEl || !codeEl) { alert('폼 요소를 찾을 수 없습니다.'); return; }
+    const date = dateEl.value;
+    const title = titleEl.value.trim();
+    const desc = descEl ? descEl.value.trim() : '';
+    const code = codeEl.value.trim();
+    if (!date || !title) { alert('날짜와 제목은 필수입니다!'); return; }
+    if (!code) { alert('코드를 입력해 주세요!'); return; }
     if (!portfolios[currentUser]) portfolios[currentUser] = [];
-    portfolios[currentUser].unshift(newData);
+    portfolios[currentUser].unshift({
+      id:Date.now(), type:'python', date, subject:'파이썬', title, desc, code,
+      savedOutput: outEl ? outEl.textContent : '', isErr: outEl ? outEl.classList.contains('error') : false, images:[]
+    });
     clearPyForm(); hideAllForms(); render();
-  }
+  } catch(e) { alert('저장 중 오류: ' + e.message); }
 }
+function clearPyForm() {
+  const els = ['pTitle','pDesc','pyCodeInput'];
+  els.forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  const d = document.getElementById('pDate');
+  if (d) d.value = new Date().toISOString().split('T')[0];
+  const out = document.getElementById('pyOutput');
+  if (out) { out.textContent='실행 버튼을 눌러 결과를 확인하세요.'; out.className=''; }
+}
+
+// ── DELETE / FILTER ──
+function deleteRecord(id) {
+  if (!confirm('이 기록을 삭제할까요?')) return;
+  portfolios[currentUser] = portfolios[currentUser].filter(r => r.id !== id);
+  render();
+}
+function setFilter(s, el) {
+  currentFilter = s;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active'); render();
+}
+
+// ── RENDER ──
+function render() {
+  const records = portfolios[currentUser] || [];
+  const subjects = [...new Set(records.filter(r=>r.type==='text').map(r=>r.subject))];
+  const pyCount = records.filter(r => r.type === 'python').length;
+  document.getElementById('statTotal').textContent = records.length;
+  document.getElementById('statSubjects').textContent = subjects.length;
+  document.getElementById('statPy').textContent = pyCount;
+
+  let filtered = records;
+  if (currentFilter === '__py__') filtered = records.filter(r => r.type === 'python');
+  else if (currentFilter !== '전체') filtered = records.filter(r => r.subject === currentFilter);
+
+  const list = document.getElementById('recordList');
+  const empty = document.getElementById('emptyState');
+  if (!filtered.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  list.innerHTML = filtered.map(r => r.type === 'python' ? renderPyCard(r) : renderTextCard(r)).join('');
+  document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+}
+
+function renderTextCard(r) {
+  return `<div class="record-card">
+    <div class="record-top">
+      <div class="record-meta">
+        <span class="badge badge-subject">📝 기록</span>
+        <span class="badge badge-date">📅 ${fmtDate(r.date)}</span>
+      </div>
+      <button class="btn-icon" onclick="deleteRecord(${r.id})">🗑️</button>
+    </div>
+    <div class="record-title">${r.title}</div>
+    ${r.content ? `<div class="record-content">${esc(r.content)}</div>` : ''}
+    ${r.images.length ? `<div class="record-images">${r.images.map(img=>`<img src="${img.dataUrl}" onclick="openLightbox('${img.dataUrl}')">`).join('')}</div>` : ''}
+  </div>`;
+}
+
+function renderPyCard(r) {
+  return `<div class="record-card py-card">
+    <div class="record-top">
+      <div class="record-meta">
+        <span class="badge badge-py">🐍 Python</span>
+        <span class="badge badge-date">📅 ${fmtDate(r.date)}</span>
+      </div>
+      <button class="btn-icon" onclick="deleteRecord(${r.id})">🗑️</button>
+    </div>
+    <div class="record-title">${r.title}</div>
+    ${r.desc ? `<div class="record-content" style="margin-bottom:10px">${esc(r.desc)}</div>` : ''}
+    <div class="saved-code-wrap">
+      <div class="saved-code-header">
+        <span>🐍 python</span>
+        <button onclick="copyCode(${r.id})">📋 복사</button>
+      </div>
+      <pre><code class="language-python">${esc(r.code)}</code></pre>
+      ${r.savedOutput ? `<div class="saved-output ${r.isErr?'err':''}">${esc(r.savedOutput)}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function copyCode(id) {
+  const r = portfolios[currentUser].find(x => x.id === id);
+  if (!r) return;
+  navigator.clipboard.writeText(r.code).then(() => alert('코드가 복사됐어요! 📋'));
+}
+
+function printPortfolio() {
+  const tf = document.getElementById('textForm').style.display;
+  const pf = document.getElementById('pyForm').style.display;
+  document.getElementById('textForm').style.display = 'none';
+  document.getElementById('pyForm').style.display = 'none';
+  window.print();
+  document.getElementById('textForm').style.display = tf;
+  document.getElementById('pyForm').style.display = pf;
+}
+
+function fmtDate(d) { const dt = new Date(d); return `${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일`; }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function openLightbox(src) { document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').classList.add('open'); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+</script>
+</body>
+</html>
