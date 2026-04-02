@@ -273,14 +273,9 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
         <div class="form-group"><label>💡 코드 설명</label><textarea id="pDesc" placeholder="이 코드가 무엇을 하는지 설명해 주세요..." style="min-height:80px"></textarea></div>
         <label style="font-size:.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;">🐍 파이썬 코드</label>
         <div class="py-editor-wrap">
-          <div class="py-editor-header"><span>🐍 Python</span><button onclick="runCode()">▶ 실행</button></div>
+          <div class="py-editor-header"><span>🐍 Python</span></div>
           <textarea id="pyCodeInput" spellcheck="false" placeholder="# 파이썬 코드를 여기에 붙여넣기 하세요&#10;print('Hello, World!')"></textarea>
         </div>
-        <div class="py-output-wrap">
-          <div class="py-output-header"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><span>Output</span></div>
-          <div id="pyOutput">실행 버튼을 눌러 결과를 확인하세요.</div>
-        </div>
-        <button class="py-run-btn" onclick="runCode()">▶ 코드 실행하기</button>
         <div class="form-actions">
           <button class="btn-secondary" onclick="clearPyForm()">초기화</button>
           <button class="btn-py-primary" id="btnSavePy" onclick="savePython()">💾 코드 저장하기</button>
