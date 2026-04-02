@@ -100,19 +100,9 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
 
 /* PYTHON */
 .py-editor-wrap{border-radius:10px;overflow:hidden;border:1.5px solid var(--py);margin-bottom:12px;}
-.py-editor-header{background:#eff6ff;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #bfdbfe;}
+.py-editor-header{background:#eff6ff;padding:8px 14px;border-bottom:1px solid #bfdbfe;}
 .py-editor-header span{color:var(--py);font-size:.78rem;font-family:monospace;font-weight:600;}
-.py-editor-header button{background:var(--py);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:.75rem;cursor:pointer;font-weight:600;}
 #pyCodeInput{width:100%;min-height:160px;padding:14px;background:#fff;color:#24292e;font-family:'Courier New',monospace;font-size:.88rem;border:none;resize:vertical;outline:none;line-height:1.8;}
-.py-output-wrap{background:#f0fdf4;border-radius:10px;border:1.5px solid #bbf7d0;overflow:hidden;margin-bottom:12px;}
-.py-output-header{background:#dcfce7;padding:7px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #bbf7d0;}
-.py-output-header span{color:#166534;font-size:.76rem;font-family:monospace;font-weight:600;}
-.dot{width:10px;height:10px;border-radius:50%;}
-.dot-r{background:#ef4444;}.dot-y{background:#f59e0b;}.dot-g{background:#10b981;}
-#pyOutput{padding:12px 14px;min-height:60px;font-family:'Courier New',monospace;font-size:.85rem;color:#166534;white-space:pre-wrap;line-height:1.6;}
-#pyOutput.error{color:#991b1b;}
-#pyOutput.success{color:#166534;}
-.py-run-btn{width:100%;padding:10px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;margin-bottom:12px;}
 
 /* FILTER */
 .filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
@@ -702,15 +692,13 @@ async function savePython(){
   const title=document.getElementById('pTitle').value.trim();
   const desc=document.getElementById('pDesc').value.trim();
   const code=document.getElementById('pyCodeInput').value.trim();
-  const outEl=document.getElementById('pyOutput');
   if(!date||!title){alert('날짜와 제목은 필수입니다!');return;}
   if(!code){alert('코드를 입력해 주세요!');return;}
   const btn=document.getElementById('btnSavePy');
   btn.disabled=true; btn.textContent='저장 중...';
   try{
     if(!portfolios[currentUser])portfolios[currentUser]=[];
-    portfolios[currentUser].push({id:Date.now(),type:'python',date,title,desc,code,
-      savedOutput:outEl.textContent,isErr:outEl.classList.contains('error'),images:[]});
+    portfolios[currentUser].push({id:Date.now(),type:'python',date,title,desc,code,images:[]});
     await savePortfolio(currentUser);
     clearPyForm(); hideAllForms(); render();
   }catch(e){alert('저장 오류: '+e.message);}
@@ -768,7 +756,6 @@ function renderPyCard(r){return `<div class="record-card py-card">
     <div class="saved-code-header"><span>🐍 python</span>
     <button onclick="copyCode(${r.id})">📋 복사</button></div>
     <pre><code class="language-python">${esc(r.code)}</code></pre>
-    ${r.savedOutput?`<div class="saved-output ${r.isErr?'err':''}">${esc(r.savedOutput)}</div>`:''}
   </div>
 </div>`;}
 function copyCode(id){
