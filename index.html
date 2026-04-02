@@ -142,8 +142,13 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
 .saved-code-header span{color:var(--muted);font-size:.75rem;font-family:monospace;}
 .saved-code-header button{background:var(--primary-light);color:var(--primary);border:none;border-radius:5px;padding:3px 10px;font-size:.72rem;cursor:pointer;font-weight:600;}
 .saved-code-header button:hover{background:var(--primary);color:#fff;}
-.saved-code-wrap pre{margin:0!important;border-radius:0!important;background:#f8fafc!important;}
-.saved-code-wrap code{font-size:.85rem!important;}
+.saved-code-wrap pre{margin:0!important;border-radius:0!important;background:#f8fafc!important;overflow-x:auto;}
+.saved-code-wrap code{font-size:.85rem!important;font-family:'Courier New',monospace!important;white-space:pre-wrap;word-break:break-all;display:block;}
+
+@media print{
+  .saved-code-wrap pre{overflow:visible!important;}
+  .saved-code-wrap code{white-space:pre-wrap!important;word-break:break-word!important;}
+}
 .saved-output{background:#f0fdf4;padding:8px 12px;font-family:'Courier New',monospace;font-size:.82rem;color:#166534;white-space:pre-wrap;border-top:1px solid #bbf7d0;}
 .saved-output.err{background:#fef2f2;color:#991b1b;border-top:1px solid #fecaca;}
 
@@ -576,7 +581,7 @@ async function saveText(){
   btn.disabled=true; btn.textContent='저장 중...';
   try{
     if(!portfolios[currentUser])portfolios[currentUser]=[];
-    portfolios[currentUser].unshift({id:Date.now(),type:'text',date,title,content,images:pendingImages.map(i=>i.dataUrl)});
+    portfolios[currentUser].push({id:Date.now(),type:'text',date,title,content,images:pendingImages.map(i=>i.dataUrl)});
     await savePortfolio(currentUser);
     clearTextForm(); hideAllForms(); render();
   }catch(e){alert('저장 오류: '+e.message);}
@@ -637,7 +642,7 @@ async function savePython(){
   btn.disabled=true; btn.textContent='저장 중...';
   try{
     if(!portfolios[currentUser])portfolios[currentUser]=[];
-    portfolios[currentUser].unshift({id:Date.now(),type:'python',date,title,desc,code,
+    portfolios[currentUser].push({id:Date.now(),type:'python',date,title,desc,code,
       savedOutput:outEl.textContent,isErr:outEl.classList.contains('error'),images:[]});
     await savePortfolio(currentUser);
     clearPyForm(); hideAllForms(); render();
