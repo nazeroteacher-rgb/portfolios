@@ -14,10 +14,17 @@
   --danger:#ef4444;--py:#3b82f6;--py-light:#dbeafe;
 }
 body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.hljs{background:#282c34;color:#abb2bf;padding:14px!important;border-radius:0;}
-.hljs-comment{color:#5c6370;font-style:italic}.hljs-keyword{color:#c678dd}
-.hljs-string{color:#98c379}.hljs-number{color:#d19a66}
-.hljs-built_in{color:#e6c07b}.hljs-literal{color:#56b6c2}.hljs-title{color:#61aeee}
+
+/* hljs - 흰 바탕 테마 */
+.hljs{background:#f8fafc;color:#24292e;padding:14px!important;border-radius:0;font-family:'Courier New',monospace;font-size:.85rem;line-height:1.6;}
+.hljs-comment,.hljs-quote{color:#6a737d;font-style:italic}
+.hljs-keyword,.hljs-selector-tag{color:#d73a49;font-weight:600}
+.hljs-string,.hljs-addition{color:#032f62}
+.hljs-number,.hljs-literal{color:#005cc5}
+.hljs-built_in,.hljs-title.class_{color:#6f42c1}
+.hljs-title,.hljs-function{color:#6f42c1;font-weight:600}
+.hljs-variable,.hljs-attr{color:#e36209}
+.hljs-operator{color:#d73a49}
 
 /* LOADING */
 #loadingScreen{position:fixed;inset:0;background:rgba(99,102,241,.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;}
@@ -36,7 +43,7 @@ body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);mi
 .login-field input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;transition:border .2s;}
 .login-field input:focus{outline:none;border-color:var(--primary);}
 .login-err{color:var(--danger);font-size:.8rem;margin-bottom:10px;min-height:18px;}
-.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;}
+.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s;}
 .btn-login:hover{opacity:.88;}
 .btn-login:disabled{opacity:.6;cursor:not-allowed;}
 .login-hint{margin-top:16px;font-size:.75rem;color:var(--muted);}
@@ -83,28 +90,28 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
 .image-preview-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
 .image-preview-item{position:relative;}
 .image-preview-item img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--border);}
-.img-del{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.img-del{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:9px;cursor:pointer;}
 .form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px;}
 .btn-primary{background:var(--primary);color:#fff;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.88rem;font-weight:700;}
 .btn-primary:hover{background:#4f46e5;}
 .btn-primary:disabled{opacity:.6;cursor:not-allowed;}
 .btn-py-primary{background:var(--py);color:#fff;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-size:.88rem;font-weight:700;}
-.btn-py-primary:disabled{opacity:.6;cursor:not-allowed;}
 .btn-secondary{background:var(--bg);color:var(--muted);padding:9px 16px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;font-size:.85rem;font-weight:600;}
 
 /* PYTHON */
 .py-editor-wrap{border-radius:10px;overflow:hidden;border:1.5px solid var(--py);margin-bottom:12px;}
-.py-editor-header{background:#1e293b;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;}
-.py-editor-header span{color:#94a3b8;font-size:.78rem;font-family:monospace;}
-.py-editor-header button{background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:.75rem;cursor:pointer;font-weight:600;}
-#pyCodeInput{width:100%;min-height:160px;padding:14px;background:#282c34;color:#abb2bf;font-family:'Courier New',monospace;font-size:.85rem;border:none;resize:vertical;outline:none;line-height:1.6;}
-.py-output-wrap{background:#1a1a2e;border-radius:10px;border:1.5px solid #334155;overflow:hidden;margin-bottom:12px;}
-.py-output-header{background:#0f172a;padding:7px 14px;display:flex;align-items:center;gap:8px;}
-.py-output-header span{color:#64748b;font-size:.76rem;font-family:monospace;}
+.py-editor-header{background:#eff6ff;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #bfdbfe;}
+.py-editor-header span{color:var(--py);font-size:.78rem;font-family:monospace;font-weight:600;}
+.py-editor-header button{background:var(--py);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:.75rem;cursor:pointer;font-weight:600;}
+#pyCodeInput{width:100%;min-height:160px;padding:14px;background:#fff;color:#24292e;font-family:'Courier New',monospace;font-size:.88rem;border:none;resize:vertical;outline:none;line-height:1.8;}
+.py-output-wrap{background:#f0fdf4;border-radius:10px;border:1.5px solid #bbf7d0;overflow:hidden;margin-bottom:12px;}
+.py-output-header{background:#dcfce7;padding:7px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #bbf7d0;}
+.py-output-header span{color:#166534;font-size:.76rem;font-family:monospace;font-weight:600;}
 .dot{width:10px;height:10px;border-radius:50%;}
 .dot-r{background:#ef4444;}.dot-y{background:#f59e0b;}.dot-g{background:#10b981;}
-#pyOutput{padding:12px 14px;min-height:60px;font-family:'Courier New',monospace;font-size:.83rem;color:#e2e8f0;white-space:pre-wrap;line-height:1.6;}
-#pyOutput.error{color:#f87171;}#pyOutput.success{color:#6ee7b7;}
+#pyOutput{padding:12px 14px;min-height:60px;font-family:'Courier New',monospace;font-size:.85rem;color:#166534;white-space:pre-wrap;line-height:1.6;}
+#pyOutput.error{color:#991b1b;}
+#pyOutput.success{color:#166534;}
 .py-run-btn{width:100%;padding:10px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;margin-bottom:12px;}
 
 /* FILTER */
@@ -130,15 +137,15 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
 .record-images{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
 .record-images img{width:88px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:transform .2s;}
 .record-images img:hover{transform:scale(1.05);}
-.saved-code-wrap{margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #334155;}
-.saved-code-header{background:#1e293b;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;}
-.saved-code-header span{color:#94a3b8;font-size:.75rem;font-family:monospace;}
-.saved-code-header button{background:#334155;color:#94a3b8;border:none;border-radius:5px;padding:3px 10px;font-size:.72rem;cursor:pointer;}
-.saved-code-header button:hover{background:#3b82f6;color:#fff;}
-.saved-code-wrap pre{margin:0!important;border-radius:0!important;}
-.saved-code-wrap code{font-size:.8rem!important;}
-.saved-output{background:#0f172a;padding:8px 12px;font-family:'Courier New',monospace;font-size:.78rem;color:#6ee7b7;white-space:pre-wrap;border-top:1px solid #1e293b;}
-.saved-output.err{color:#f87171;}
+.saved-code-wrap{margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.saved-code-header{background:#f1f5f9;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.saved-code-header span{color:var(--muted);font-size:.75rem;font-family:monospace;}
+.saved-code-header button{background:var(--primary-light);color:var(--primary);border:none;border-radius:5px;padding:3px 10px;font-size:.72rem;cursor:pointer;font-weight:600;}
+.saved-code-header button:hover{background:var(--primary);color:#fff;}
+.saved-code-wrap pre{margin:0!important;border-radius:0!important;background:#f8fafc!important;}
+.saved-code-wrap code{font-size:.85rem!important;}
+.saved-output{background:#f0fdf4;padding:8px 12px;font-family:'Courier New',monospace;font-size:.82rem;color:#166534;white-space:pre-wrap;border-top:1px solid #bbf7d0;}
+.saved-output.err{background:#fef2f2;color:#991b1b;border-top:1px solid #fecaca;}
 
 /* MASTER */
 .master-tabs{display:flex;gap:8px;margin-bottom:20px;}
@@ -171,6 +178,7 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
 .lightbox img{max-width:90vw;max-height:85vh;border-radius:10px;}
 .lightbox-close{position:absolute;top:20px;right:28px;color:#fff;font-size:2rem;cursor:pointer;}
 
+/* PRINT */
 @media print{
   #loginScreen,#loadingScreen{display:none!important;}
   #appScreen{display:block!important;}
@@ -187,7 +195,7 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
 <!-- 로딩 -->
 <div id="loadingScreen">
   <div class="spin"></div>
-  <p id="loadingMsg">Firebase 연결 중...</p>
+  <p>Firebase 연결 중...</p>
 </div>
 
 <!-- LOGIN -->
@@ -232,7 +240,7 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
         <button class="add-type-btn" id="btnAddText" onclick="showForm('text')"><span class="icon">📝</span>글 내용 추가하기</button>
         <button class="add-type-btn" id="btnAddPy" onclick="showForm('python')"><span class="icon">🐍</span>파이썬 코드 추가하기</button>
       </div>
-      <!-- 텍스트 폼 -->
+      <!-- 글 폼 -->
       <div class="add-form" id="textForm" style="display:none">
         <h2 style="color:var(--primary)">📝 글 내용 추가</h2>
         <div class="form-group"><label>📅 수업 날짜</label><input type="date" id="tDate"></div>
@@ -279,7 +287,7 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
         <button class="filter-btn" onclick="setFilter('__py__',this)">🐍 파이썬만</button>
       </div>
       <div class="records" id="recordList"></div>
-      <div class="empty" id="emptyState" style="display:none"><div class="icon">📖</div><p>아직 학습 기록이 없어요.<br>위 버튼으로 첫 기록을 추가해 보세요!</p></div>
+      <div class="empty" id="emptyState" style="display:none"><div class="icon">📖</div><p>아직 학습 기록이 없어요.</p></div>
     </div>
 
     <!-- 마스터 UI -->
@@ -311,13 +319,13 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
 <div class="modal-overlay" id="pwModal">
   <div class="modal-box">
     <h3>🔑 비밀번호 변경</h3>
-    <div class="form-group"><label>현재 비밀번호</label><input type="password" id="pwCurrent" placeholder="현재 비밀번호"></div>
+    <div class="form-group"><label>현재 비밀번호</label><input type="password" id="pwCurrent"></div>
     <div class="form-group"><label>새 비밀번호</label><input type="password" id="pwNew" placeholder="4자리 이상"></div>
-    <div class="form-group"><label>새 비밀번호 확인</label><input type="password" id="pwConfirm" placeholder="재입력"></div>
+    <div class="form-group"><label>새 비밀번호 확인</label><input type="password" id="pwConfirm"></div>
     <div id="pwErr" style="color:var(--danger);font-size:.8rem;margin-bottom:10px;min-height:16px;"></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button class="btn-secondary" onclick="closeModal('pwModal')">취소</button>
-      <button class="btn-primary" id="btnDoChangePw" onclick="doChangePw()">변경하기</button>
+      <button class="btn-primary" onclick="doChangePw()">변경하기</button>
     </div>
   </div>
 </div>
@@ -325,23 +333,23 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
   <div class="modal-box">
     <h3>🎓 새 학번 추가</h3>
     <div class="form-group"><label>학번</label><input type="text" id="newStudentId" placeholder="예) 3105" maxlength="6"></div>
-    <div class="form-group"><label>이름 (선택)</label><input type="text" id="newStudentName" placeholder="미입력시 학번으로 표시"></div>
-    <div class="form-group"><label>초기 비밀번호 (선택)</label><input type="text" id="newStudentPw" placeholder="미입력시 학번과 동일"></div>
+    <div class="form-group"><label>이름 (선택)</label><input type="text" id="newStudentName" placeholder="미입력 시 학번으로 표시"></div>
+    <div class="form-group"><label>초기 비밀번호 (선택)</label><input type="text" id="newStudentPw" placeholder="미입력 시 학번과 동일"></div>
     <div id="addStudentErr" style="color:var(--danger);font-size:.8rem;margin-bottom:10px;min-height:16px;"></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button class="btn-secondary" onclick="closeModal('addStudentModal')">취소</button>
-      <button class="btn-primary" id="btnDoAddStudent" onclick="doAddStudent()">추가하기</button>
+      <button class="btn-primary" id="btnAddStudentOk" onclick="doAddStudent()">추가하기</button>
     </div>
   </div>
 </div>
 <div class="modal-overlay" id="addSubjectModal">
   <div class="modal-box">
     <h3>📚 새 과목 추가</h3>
-    <div class="form-group"><label>과목명</label><input type="text" id="newSubjectName" placeholder="예) 파이썬, 수학, 영어..."></div>
+    <div class="form-group"><label>과목명</label><input type="text" id="newSubjectName" placeholder="예) 파이썬, 수학..."></div>
     <div id="addSubjectErr" style="color:var(--danger);font-size:.8rem;margin-bottom:8px;min-height:16px;"></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button class="btn-secondary" onclick="closeModal('addSubjectModal')">취소</button>
-      <button class="btn-primary" id="btnDoAddSubject" onclick="doAddSubject()">추가하기</button>
+      <button class="btn-primary" onclick="doAddSubject()">추가하기</button>
     </div>
   </div>
 </div>
@@ -352,14 +360,14 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
     <div class="student-select-grid" id="studentSelectGrid"></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button class="btn-secondary" onclick="closeModal('assignModal')">취소</button>
-      <button class="btn-primary" id="btnDoAssign" onclick="doAssign()">저장하기</button>
+      <button class="btn-primary" onclick="doAssign()">저장하기</button>
     </div>
   </div>
 </div>
 <div class="modal-overlay" id="subjectPortfolioModal">
   <div class="portfolio-modal-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <h3 id="subjectPortfolioTitle">과목 포트폴리오</h3>
+      <h3 id="subjectPortfolioTitle"></h3>
       <button class="btn-secondary" onclick="closeModal('subjectPortfolioModal')">✕ 닫기</button>
     </div>
     <div id="subjectPortfolioContent"></div>
@@ -371,11 +379,9 @@ header p{font-size:.78rem;opacity:.85;margin-top:2px;}
   <img id="lightboxImg" src="">
 </div>
 
-<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, getDocs, collection, deleteDoc }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC8eXBzkJZzAk8ck1uHenc8X9tbf9VLtvE",
@@ -391,7 +397,7 @@ const db = getFirestore(app);
 
 // ── 상태 ──
 let STUDENTS = {};
-let portfolios = {};
+let portfolios = {}; // 메모리 캐시
 let subjectMap = {};
 let currentUser = null;
 let pendingImages = [];
@@ -399,37 +405,33 @@ let currentFilter = '전체';
 let assigningSubject = null;
 let assignTempSelected = [];
 
-// ── 유틸 ──
-const $ = id => document.getElementById(id);
-const loading = (show, msg='처리 중...') => {
-  $('loadingScreen').style.display = show ? 'flex' : 'none';
-  if(msg) $('loadingMsg').textContent = msg;
-};
-const setBtn = (id, disabled, text) => { const b=$(id); if(b){b.disabled=disabled;if(text)b.textContent=text;} };
-window.openModal = id => $(id).classList.add('open');
-window.closeModal = id => $(id).classList.remove('open');
-
-// ── 초기 로드 ──
+// ── 초기화 ──
 async function init() {
-  loading(true, 'Firebase 연결 중...');
+  showLoading(true, 'Firebase 연결 중...');
   try {
-    const snap = await getDocs(collection(db, 'students'));
-    STUDENTS = {};
-    snap.forEach(d => STUDENTS[d.id] = d.data());
-    if (!Object.keys(STUDENTS).length) await initDefaultStudents();
-
-    const sSnap = await getDocs(collection(db, 'subjects'));
-    subjectMap = {};
-    sSnap.forEach(d => subjectMap[d.id] = d.data().members || []);
+    await loadStudents();
+    await loadSubjects();
   } catch(e) {
-    alert('Firebase 연결 실패: ' + e.message);
+    alert('Firebase 연결 실패: ' + e.message + '\n\nFirestore 규칙을 테스트 모드로 설정했는지 확인해 주세요.');
   }
-  loading(false);
-  $('loginScreen').style.display = 'flex';
+  showLoading(false);
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function showLoading(show, msg='로딩 중...') {
+  const el = document.getElementById('loadingScreen');
+  el.style.display = show ? 'flex' : 'none';
+  const p = el.querySelector('p'); if(p) p.textContent = msg;
+}
+
+async function loadStudents() {
+  const snap = await getDocs(collection(db, 'students'));
+  STUDENTS = {};
+  snap.forEach(d => { STUDENTS[d.id] = d.data(); });
+  if (Object.keys(STUDENTS).length === 0) await initDefaultStudents();
 }
 
 async function initDefaultStudents() {
-  loading(true, '초기 데이터 설정 중...');
   const defaults = {};
   [3102,3116,3121,3122,3205,3215,3216,3219,3229,3230,3232,
    3603,3606,3609,3613,3614,3616,3617,3619,3620,3621,3623,3624,3630
@@ -439,86 +441,105 @@ async function initDefaultStudents() {
   });
   defaults['1111']={pw:'1111',name:'선생님',role:'teacher'};
   defaults['MASTER']={pw:'5989',name:'마스터',role:'master'};
-  for(const [id,data] of Object.entries(defaults))
+  for(const [id,data] of Object.entries(defaults)) {
     await setDoc(doc(db,'students',id), data);
+  }
   STUDENTS = defaults;
 }
 
+async function loadSubjects() {
+  const snap = await getDocs(collection(db, 'subjects'));
+  subjectMap = {};
+  snap.forEach(d => { subjectMap[d.id] = d.data().members || []; });
+}
+
+async function loadPortfolio(uid) {
+  if (portfolios[uid] !== undefined) return;
+  const snap = await getDoc(doc(db, 'portfolios', uid));
+  portfolios[uid] = snap.exists() ? (snap.data().records || []) : [];
+}
+
+async function savePortfolio(uid) {
+  await setDoc(doc(db,'portfolios',uid), {records: portfolios[uid]});
+}
+
+// ── 모달 ──
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+window.openModal=openModal; window.closeModal=closeModal;
+
 // ── 로그인 ──
-window.login = async function() {
-  const rawId = $('inputId').value.trim();
-  const uid = rawId.toUpperCase() === 'MASTER' ? 'MASTER' : rawId;
-  const pw = $('inputPw').value;
-  const err = $('loginErr');
+async function login() {
+  const raw = document.getElementById('inputId').value.trim();
+  const uid = raw.toUpperCase() === 'MASTER' ? 'MASTER' : raw;
+  const pw = document.getElementById('inputPw').value;
+  const err = document.getElementById('loginErr');
   if (!STUDENTS[uid]) { err.textContent='존재하지 않는 학번입니다.'; return; }
   if (STUDENTS[uid].pw !== pw) { err.textContent='비밀번호가 올바르지 않습니다.'; return; }
   err.textContent='';
-  setBtn('loginBtn', true, '로그인 중...');
+  const btn = document.getElementById('loginBtn');
+  btn.disabled=true; btn.textContent='로그인 중...';
   currentUser = uid;
-
   if (uid === 'MASTER') {
     showApp('👑 마스터 계정','전체 학생 포트폴리오 관리',false,false);
-    $('masterUI').style.display='block';
+    document.getElementById('masterUI').style.display='block';
     renderMasterStudents();
   } else {
-    loading(true,'포트폴리오 불러오는 중...');
+    showLoading(true,'포트폴리오 불러오는 중...');
     await loadPortfolio(uid);
-    loading(false);
+    showLoading(false);
     showApp(`🎓 ${uid} · ${STUDENTS[uid].name}`,`${STUDENTS[uid].name}의 학습 포트폴리오`,true,true);
-    $('studentUI').style.display='block';
+    document.getElementById('studentUI').style.display='block';
     const today=new Date().toISOString().split('T')[0];
-    $('tDate').value=today; $('pDate').value=today;
+    document.getElementById('tDate').value=today;
+    document.getElementById('pDate').value=today;
     render();
   }
-  setBtn('loginBtn',false,'로그인');
-};
+  btn.disabled=false; btn.textContent='로그인';
+}
+window.login=login;
 
 function showApp(badge,sub,showPw,showPrint){
-  $('loginScreen').style.display='none';
-  $('appScreen').style.display='block';
-  $('userBadge').textContent=badge;
-  $('headerSub').textContent=sub;
-  $('btnChangePw').style.display=showPw?'inline-block':'none';
-  $('btnPrint').style.display=showPrint?'inline-block':'none';
-  $('studentUI').style.display='none';
-  $('masterUI').style.display='none';
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+  document.getElementById('userBadge').textContent=badge;
+  document.getElementById('headerSub').textContent=sub;
+  document.getElementById('btnChangePw').style.display=showPw?'inline-block':'none';
+  document.getElementById('btnPrint').style.display=showPrint?'inline-block':'none';
+  document.getElementById('studentUI').style.display='none';
+  document.getElementById('masterUI').style.display='none';
 }
 
-window.logout = function(){
-  currentUser=null; currentFilter='전체';
-  $('appScreen').style.display='none';
-  $('loginScreen').style.display='flex';
-  $('inputId').value=''; $('inputPw').value='';
+function logout(){
+  currentUser=null; currentFilter='전체'; pendingImages=[];
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('inputId').value='';
+  document.getElementById('inputPw').value='';
   hideAllForms();
-};
-
-// ── 포트폴리오 Firebase I/O ──
-async function loadPortfolio(uid){
-  if(portfolios[uid]!==undefined) return;
-  try{
-    const snap=await getDoc(doc(db,'portfolios',uid));
-    portfolios[uid]=snap.exists()?(snap.data().records||[]):[];
-  }catch(e){ portfolios[uid]=[]; }
 }
-async function savePortfolio(uid){
-  await setDoc(doc(db,'portfolios',uid),{records:portfolios[uid]});
-}
+window.logout=logout;
 
 // ── 폼 ──
-window.showForm = function(type){
+function showForm(type){
   hideAllForms();
-  if(type==='text'){$('textForm').style.display='block';$('btnAddText').classList.add('active-text');}
-  else{$('pyForm').style.display='block';$('btnAddPy').classList.add('active-py');}
-};
-function hideAllForms(){
-  ['textForm','pyForm'].forEach(id=>{const el=$(id);if(el)el.style.display='none';});
-  const bt=$('btnAddText'),bp=$('btnAddPy');
-  if(bt)bt.className='add-type-btn'; if(bp)bp.className='add-type-btn';
+  if(type==='text'){
+    document.getElementById('textForm').style.display='block';
+    document.getElementById('btnAddText').classList.add('active-text');
+  } else {
+    document.getElementById('pyForm').style.display='block';
+    document.getElementById('btnAddPy').classList.add('active-py');
+  }
 }
-window.hideAllForms=hideAllForms;
+function hideAllForms(){
+  ['textForm','pyForm'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const bt=document.getElementById('btnAddText'),bp=document.getElementById('btnAddPy');
+  if(bt)bt.className='add-type-btn';if(bp)bp.className='add-type-btn';
+}
+window.showForm=showForm; window.hideAllForms=hideAllForms;
 
-// ── 이미지 압축 ──
-window.handleImg = function(e){
+// ── 이미지 (압축) ──
+function handleImg(e){
   Array.from(e.target.files).forEach(f=>{
     const r=new FileReader();
     r.onload=ev=>{
@@ -535,49 +556,55 @@ window.handleImg = function(e){
       img.src=ev.target.result;
     };
     r.readAsDataURL(f);
-  });
-  e.target.value='';
-};
+  }); e.target.value='';
+}
 function renderPending(){
-  $('imgPreview').innerHTML=pendingImages.map((img,i)=>`
+  document.getElementById('imgPreview').innerHTML=pendingImages.map((img,i)=>`
     <div class="image-preview-item"><img src="${img.dataUrl}">
     <button class="img-del" onclick="removePending(${i})">✕</button></div>`).join('');
 }
-window.removePending=function(i){pendingImages.splice(i,1);renderPending();};
+function removePending(i){pendingImages.splice(i,1);renderPending();}
+window.handleImg=handleImg; window.removePending=removePending;
 
-// ── 저장: 텍스트 ──
-window.saveText = async function(){
-  const date=$('tDate').value, title=$('tTitle').value.trim(), content=$('tContent').value.trim();
+// ── 텍스트 저장 ──
+async function saveText(){
+  const date=document.getElementById('tDate').value;
+  const title=document.getElementById('tTitle').value.trim();
+  const content=document.getElementById('tContent').value.trim();
   if(!date||!title){alert('날짜와 제목은 필수입니다!');return;}
-  setBtn('btnSaveText',true,'저장 중...');
+  const btn=document.getElementById('btnSaveText');
+  btn.disabled=true; btn.textContent='저장 중...';
   try{
     if(!portfolios[currentUser])portfolios[currentUser]=[];
     portfolios[currentUser].unshift({id:Date.now(),type:'text',date,title,content,images:pendingImages.map(i=>i.dataUrl)});
     await savePortfolio(currentUser);
     clearTextForm(); hideAllForms(); render();
   }catch(e){alert('저장 오류: '+e.message);}
-  setBtn('btnSaveText',false,'💾 저장하기');
-};
-window.clearTextForm=function(){
-  ['tTitle','tContent'].forEach(id=>{const el=$(id);if(el)el.value='';});
-  $('tDate').value=new Date().toISOString().split('T')[0];
-  pendingImages=[];renderPending();
-};
+  btn.disabled=false; btn.textContent='💾 저장하기';
+}
+function clearTextForm(){
+  ['tTitle','tContent'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('tDate').value=new Date().toISOString().split('T')[0];
+  pendingImages=[]; renderPending();
+}
+window.saveText=saveText; window.clearTextForm=clearTextForm;
 
-// ── 파이썬 실행 ──
-window.runCode=function(){
-  const code=$('pyCodeInput').value, out=$('pyOutput');
-  out.className='';out.textContent='실행 중...';
+// ── 파이썬 ──
+function runCode(){
+  const code=document.getElementById('pyCodeInput').value;
+  const out=document.getElementById('pyOutput');
+  out.className=''; out.textContent='실행 중...';
   try{
     const output=[];
     pySimulate(code,(...a)=>output.push(a.map(String).join(' ')));
     out.className='success';
     out.textContent=output.length?output.join('\n'):'(출력 없음)';
   }catch(e){out.className='error';out.textContent='❌ 오류: '+e.message;}
-};
+}
 function pySimulate(code,log){
   let js=code
-    .replace(/^#.*$/gm,'').replace(/print\((.*?)\)/g,'__log($1)')
+    .replace(/^#.*$/gm,'')
+    .replace(/print\((.*?)\)/g,'__log($1)')
     .replace(/True/g,'true').replace(/False/g,'false').replace(/None/g,'null')
     .replace(/elif /g,'else if ').replace(/and /g,'&& ').replace(/or /g,'|| ')
     .replace(/not (\w+)/g,'!$1')
@@ -585,9 +612,11 @@ function pySimulate(code,log){
     .replace(/for (\w+) in range\((\d+),\s*(\d+)(?:,\s*(\d+))?\):/g,(m,v,s,e,st)=>`for(let ${v}=${s};${v}<${e};${v}+=${st||1}){`)
     .replace(/for (\w+) in range\((\d+)\):/g,(m,v,e)=>`for(let ${v}=0;${v}<${e};${v}++){`)
     .replace(/for (\w+) in (\w+):/g,'for(let $1 of $2){')
-    .replace(/while (.+):/g,'while($1){').replace(/if (.+):/g,'if($1){').replace(/else:/g,'} else {');
+    .replace(/while (.+):/g,'while($1){')
+    .replace(/if (.+):/g,'if($1){')
+    .replace(/else:/g,'} else {');
   const lines=js.split('\n'),result=[];let prev=0;
-  for(let line of lines){
+  for(const line of lines){
     const tr=line.trimStart();if(!tr){result.push('');continue;}
     const ind=line.length-tr.length;
     if(ind<prev)for(let i=0;i<Math.floor((prev-ind)/2);i++)result.push('}');
@@ -596,50 +625,52 @@ function pySimulate(code,log){
   if(prev>0)for(let i=0;i<Math.floor(prev/2);i++)result.push('}');
   new Function('__log',result.join('\n'))(log);
 }
-
-// ── 저장: 파이썬 ──
-window.savePython=async function(){
-  const date=$('pDate').value,title=$('pTitle').value.trim();
-  const desc=$('pDesc').value.trim(),code=$('pyCodeInput').value.trim();
-  const outEl=$('pyOutput');
+async function savePython(){
+  const date=document.getElementById('pDate').value;
+  const title=document.getElementById('pTitle').value.trim();
+  const desc=document.getElementById('pDesc').value.trim();
+  const code=document.getElementById('pyCodeInput').value.trim();
+  const outEl=document.getElementById('pyOutput');
   if(!date||!title){alert('날짜와 제목은 필수입니다!');return;}
   if(!code){alert('코드를 입력해 주세요!');return;}
-  setBtn('btnSavePy',true,'저장 중...');
+  const btn=document.getElementById('btnSavePy');
+  btn.disabled=true; btn.textContent='저장 중...';
   try{
     if(!portfolios[currentUser])portfolios[currentUser]=[];
     portfolios[currentUser].unshift({id:Date.now(),type:'python',date,title,desc,code,
       savedOutput:outEl.textContent,isErr:outEl.classList.contains('error'),images:[]});
     await savePortfolio(currentUser);
-    clearPyForm();hideAllForms();render();
+    clearPyForm(); hideAllForms(); render();
   }catch(e){alert('저장 오류: '+e.message);}
-  setBtn('btnSavePy',false,'💾 코드 저장하기');
-};
-window.clearPyForm=function(){
-  ['pTitle','pDesc','pyCodeInput'].forEach(id=>{const el=$(id);if(el)el.value='';});
-  $('pDate').value=new Date().toISOString().split('T')[0];
-  const out=$('pyOutput');if(out){out.textContent='실행 버튼을 눌러 결과를 확인하세요.';out.className='';}
-};
+  btn.disabled=false; btn.textContent='💾 코드 저장하기';
+}
+function clearPyForm(){
+  ['pTitle','pDesc','pyCodeInput'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('pDate').value=new Date().toISOString().split('T')[0];
+  const out=document.getElementById('pyOutput');
+  if(out){out.textContent='실행 버튼을 눌러 결과를 확인하세요.';out.className='';}
+}
+window.runCode=runCode; window.savePython=savePython; window.clearPyForm=clearPyForm;
 
-// ── 기록 렌더 ──
-window.setFilter=function(s,el){
-  currentFilter=s;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');render();
-};
-window.deleteRecord=async function(id){
+// ── 기록 ──
+async function deleteRecord(id){
   if(!confirm('이 기록을 삭제할까요?'))return;
   portfolios[currentUser]=portfolios[currentUser].filter(r=>r.id!==id);
-  await savePortfolio(currentUser);render();
-};
+  await savePortfolio(currentUser); render();
+}
+function setFilter(s,el){
+  currentFilter=s;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); render();
+}
 function render(){
   const records=portfolios[currentUser]||[];
-  $('statTotal').textContent=records.length;
-  $('statSubjects').textContent=[...new Set(records.map(r=>r.type))].length;
-  $('statPy').textContent=records.filter(r=>r.type==='python').length;
+  document.getElementById('statTotal').textContent=records.length;
+  document.getElementById('statSubjects').textContent=[...new Set(records.map(r=>r.type))].length;
+  document.getElementById('statPy').textContent=records.filter(r=>r.type==='python').length;
   let filtered=records;
   if(currentFilter==='__py__')filtered=records.filter(r=>r.type==='python');
-  else if(currentFilter!=='전체')filtered=records.filter(r=>r.subject===currentFilter);
-  const list=$('recordList'),empty=$('emptyState');
+  const list=document.getElementById('recordList'),empty=document.getElementById('emptyState');
   if(!filtered.length){list.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
   list.innerHTML=filtered.map(r=>r.type==='python'?renderPyCard(r):renderTextCard(r)).join('');
@@ -652,7 +683,7 @@ function renderTextCard(r){return `<div class="record-card">
   </div><button class="btn-icon" onclick="deleteRecord(${r.id})">🗑️</button></div>
   <div class="record-title">${r.title}</div>
   ${r.content?`<div class="record-content">${esc(r.content)}</div>`:''}
-  ${r.images&&r.images.length?`<div class="record-images">${r.images.map(src=>`<img src="${src}" onclick="openLightbox('${src}')">`).join('')}</div>`:''}
+  ${(r.images||[]).length?`<div class="record-images">${r.images.map(u=>`<img src="${u}" onclick="openLightbox('${u}')">`).join('')}</div>`:''}
 </div>`;}
 function renderPyCard(r){return `<div class="record-card py-card">
   <div class="record-top"><div class="record-meta">
@@ -668,22 +699,23 @@ function renderPyCard(r){return `<div class="record-card py-card">
     ${r.savedOutput?`<div class="saved-output ${r.isErr?'err':''}">${esc(r.savedOutput)}</div>`:''}
   </div>
 </div>`;}
-window.copyCode=function(id){
+function copyCode(id){
   const r=(portfolios[currentUser]||[]).find(x=>x.id===id);
-  if(r)navigator.clipboard.writeText(r.code).then(()=>alert('코드가 복사됐어요! 📋'));
-};
+  if(r)navigator.clipboard.writeText(r.code).then(()=>alert('📋 코드가 복사됐어요!'));
+}
+window.deleteRecord=deleteRecord; window.setFilter=setFilter; window.copyCode=copyCode;
 
 // ── 마스터 ──
-window.switchMasterTab=function(tab){
-  $('tabStudents').classList.toggle('active',tab==='students');
-  $('tabSubjects').classList.toggle('active',tab==='subjects');
-  $('masterStudents').style.display=tab==='students'?'block':'none';
-  $('masterSubjects').style.display=tab==='subjects'?'block':'none';
+function switchMasterTab(tab){
+  document.getElementById('tabStudents').classList.toggle('active',tab==='students');
+  document.getElementById('tabSubjects').classList.toggle('active',tab==='subjects');
+  document.getElementById('masterStudents').style.display=tab==='students'?'block':'none';
+  document.getElementById('masterSubjects').style.display=tab==='subjects'?'block':'none';
   if(tab==='subjects')renderSubjectCards();
-};
+}
 function renderMasterStudents(){
   const ids=Object.keys(STUDENTS).filter(id=>id!=='MASTER');
-  $('masterList').innerHTML=ids.map(id=>{
+  document.getElementById('masterList').innerHTML=ids.map(id=>{
     const s=STUDENTS[id],recs=portfolios[id]||[];
     return `<div style="background:#fff;border-radius:12px;padding:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <div>
@@ -697,130 +729,109 @@ function renderMasterStudents(){
     </div>`;
   }).join('');
 }
-window.masterViewStudent=async function(id){
-  loading(true,'불러오는 중...');
+async function masterViewStudent(id){
+  showLoading(true,'포트폴리오 불러오는 중...');
   await loadPortfolio(id);
-  loading(false);
+  showLoading(false);
   currentUser=id; currentFilter='전체';
-  $('masterUI').style.display='none';
-  $('studentUI').style.display='block';
-  $('userBadge').textContent=`👑 마스터 보기: ${id} · ${STUDENTS[id].name}`;
-  $('headerSub').textContent=`${STUDENTS[id].name}의 포트폴리오 (읽기 전용)`;
-  $('btnChangePw').style.display='none';
-  $('btnPrint').style.display='inline-block';
+  document.getElementById('masterUI').style.display='none';
+  document.getElementById('studentUI').style.display='block';
+  document.getElementById('userBadge').textContent=`👑 마스터 보기: ${id} · ${STUDENTS[id].name}`;
+  document.getElementById('headerSub').textContent=`${STUDENTS[id].name}의 포트폴리오 (읽기 전용)`;
+  document.getElementById('btnChangePw').style.display='none';
+  document.getElementById('btnPrint').style.display='none';
   document.querySelector('.add-type-bar').style.display='none';
   hideAllForms();
-  if(!$('backToMaster')){
-    $('studentUI').insertAdjacentHTML('afterbegin',
+  const existing=document.getElementById('backToMaster');
+  if(!existing){
+    document.getElementById('studentUI').insertAdjacentHTML('afterbegin',
       `<button id="backToMaster" class="btn-secondary" style="margin-bottom:16px;" onclick="backMaster()">← 전체 목록으로</button>`);
   }
   render();
-};
-window.backMaster=function(){
-  const b=$('backToMaster');if(b)b.remove();
+}
+function backMaster(){
+  const b=document.getElementById('backToMaster');if(b)b.remove();
   currentUser='MASTER';
-  $('studentUI').style.display='none';
-  $('masterUI').style.display='block';
+  document.getElementById('studentUI').style.display='none';
+  document.getElementById('masterUI').style.display='block';
   document.querySelector('.add-type-bar').style.display='flex';
-  $('userBadge').textContent='👑 마스터 계정';
-  $('headerSub').textContent='전체 학생 포트폴리오 관리';
+  document.getElementById('userBadge').textContent='👑 마스터 계정';
+  document.getElementById('headerSub').textContent='전체 학생 포트폴리오 관리';
   renderMasterStudents();
-};
-window.masterResetPw=async function(id){
+}
+async function masterResetPw(id){
   if(!confirm(`${id} · ${STUDENTS[id].name}의 비밀번호를 학번(${id})으로 초기화할까요?`))return;
   STUDENTS[id].pw=id;
   await setDoc(doc(db,'students',id),STUDENTS[id]);
   alert(`✅ ${id}번 비밀번호가 초기화됐어요.`);
-};
+}
+window.switchMasterTab=switchMasterTab; window.masterViewStudent=masterViewStudent;
+window.backMaster=backMaster; window.masterResetPw=masterResetPw;
 
 // ── 학번 추가 ──
-window.doAddStudent=async function(){
-  const id=$('newStudentId').value.trim();
-  const name=$('newStudentName').value.trim();
-  const pw=$('newStudentPw').value.trim();
-  const err=$('addStudentErr');
+async function doAddStudent(){
+  const id=document.getElementById('newStudentId').value.trim();
+  const name=document.getElementById('newStudentName').value.trim();
+  const pw=document.getElementById('newStudentPw').value.trim();
+  const err=document.getElementById('addStudentErr');
   if(!id){err.textContent='학번을 입력해 주세요.';return;}
   if(STUDENTS[id]){err.textContent='이미 존재하는 학번입니다.';return;}
-  setBtn('btnDoAddStudent',true,'추가 중...');
-  const data={pw:pw||id, name:name||`${id}번`, role:'student'};
-  await setDoc(doc(db,'students',id),data);
-  STUDENTS[id]=data; portfolios[id]=[];
-  closeModal('addStudentModal');
-  $('newStudentId').value='';$('newStudentName').value='';$('newStudentPw').value='';
-  err.textContent='';
-  renderMasterStudents();
-  alert(`✅ 학번 ${id} (${data.name}) 이 추가됐어요!`);
-  setBtn('btnDoAddStudent',false,'추가하기');
-};
+  const btn=document.getElementById('btnAddStudentOk');
+  btn.disabled=true; btn.textContent='추가 중...';
+  try{
+    const data={pw:pw||id, name:name||`${id}번`, role:'student'};
+    await setDoc(doc(db,'students',id),data);
+    STUDENTS[id]=data; portfolios[id]=[];
+    closeModal('addStudentModal');
+    document.getElementById('newStudentId').value='';
+    document.getElementById('newStudentName').value='';
+    document.getElementById('newStudentPw').value='';
+    err.textContent='';
+    renderMasterStudents();
+    alert(`✅ 학번 ${id} (${data.name}) 이 추가됐어요!`);
+  }catch(e){err.textContent='오류: '+e.message;}
+  btn.disabled=false; btn.textContent='추가하기';
+}
+window.doAddStudent=doAddStudent;
 
-// ── 비밀번호 변경 ──
-window.doChangePw=async function(){
-  const cur=$('pwCurrent').value,nw=$('pwNew').value,cf=$('pwConfirm').value;
-  const err=$('pwErr');
-  if(STUDENTS[currentUser].pw!==cur){err.textContent='현재 비밀번호가 맞지 않습니다.';return;}
-  if(!nw||nw.length<4){err.textContent='새 비밀번호는 4자리 이상이어야 합니다.';return;}
-  if(nw!==cf){err.textContent='새 비밀번호가 일치하지 않습니다.';return;}
-  setBtn('btnDoChangePw',true,'변경 중...');
-  STUDENTS[currentUser].pw=nw;
-  await setDoc(doc(db,'students',currentUser),STUDENTS[currentUser]);
-  closeModal('pwModal'); alert('✅ 비밀번호가 변경됐어요!');
-  setBtn('btnDoChangePw',false,'변경하기');
-};
-
-// ── 과목 관리 ──
-window.doAddSubject=async function(){
-  const name=$('newSubjectName').value.trim();
-  const err=$('addSubjectErr');
+// ── 과목 ──
+async function doAddSubject(){
+  const name=document.getElementById('newSubjectName').value.trim();
+  const err=document.getElementById('addSubjectErr');
   if(!name){err.textContent='과목명을 입력해 주세요.';return;}
-  if(subjectMap[name]!==undefined){err.textContent='이미 존재하는 과목명입니다.';return;}
-  setBtn('btnDoAddSubject',true,'추가 중...');
-  subjectMap[name]=[];
+  if(subjectMap[name]){err.textContent='이미 존재하는 과목명입니다.';return;}
   await setDoc(doc(db,'subjects',name),{members:[]});
+  subjectMap[name]=[];
   closeModal('addSubjectModal');
-  $('newSubjectName').value=''; err.textContent='';
+  document.getElementById('newSubjectName').value='';
   renderSubjectCards();
-  setBtn('btnDoAddSubject',false,'추가하기');
-};
-window.openAssign=function(subjectName){
+}
+function openAssign(subjectName){
   assigningSubject=subjectName;
   assignTempSelected=[...(subjectMap[subjectName]||[])];
-  $('assignModalTitle').textContent=`📋 "${subjectName}" 학생 배정`;
+  document.getElementById('assignModalTitle').textContent=`📋 "${subjectName}" 학생 배정`;
   const ids=Object.keys(STUDENTS).filter(id=>id!=='MASTER'&&id!=='1111');
-  $('studentSelectGrid').innerHTML=ids.map(id=>
+  document.getElementById('studentSelectGrid').innerHTML=ids.map(id=>
     `<button class="sel-btn ${assignTempSelected.includes(id)?'selected':''}" onclick="toggleAssign('${id}',this)">${id}</button>`
   ).join('');
   openModal('assignModal');
-};
-window.toggleAssign=function(id,el){
+}
+function toggleAssign(id,el){
   const idx=assignTempSelected.indexOf(id);
   if(idx===-1){assignTempSelected.push(id);el.classList.add('selected');}
   else{assignTempSelected.splice(idx,1);el.classList.remove('selected');}
-};
-window.doAssign=async function(){
-  setBtn('btnDoAssign',true,'저장 중...');
+}
+async function doAssign(){
   subjectMap[assigningSubject]=[...assignTempSelected];
   await setDoc(doc(db,'subjects',assigningSubject),{members:subjectMap[assigningSubject]});
   closeModal('assignModal'); renderSubjectCards();
-  setBtn('btnDoAssign',false,'저장하기');
-};
-window.removeFromSubject=async function(name,id){
-  subjectMap[name]=subjectMap[name].filter(s=>s!==id);
-  await setDoc(doc(db,'subjects',name),{members:subjectMap[name]});
-  renderSubjectCards();
-};
-window.deleteSubject=async function(name){
-  if(!confirm(`"${name}" 과목을 삭제할까요?`))return;
-  delete subjectMap[name];
-  await deleteDoc(doc(db,'subjects',name));
-  renderSubjectCards();
-};
+}
 function renderSubjectCards(){
   const keys=Object.keys(subjectMap);
-  $('subjectEmpty').style.display=keys.length?'none':'block';
-  $('subjectCards').innerHTML=keys.map(name=>{
+  document.getElementById('subjectEmpty').style.display=keys.length?'none':'block';
+  document.getElementById('subjectCards').innerHTML=keys.map(name=>{
     const ids=subjectMap[name];
-    const chips=ids.length
-      ?ids.map(id=>`<span class="chip" onclick="removeFromSubject('${name}','${id}')">${id} ✕</span>`).join('')
+    const chips=ids.length?ids.map(id=>`<span class="chip" onclick="removeFromSubject('${name}','${id}')">${id} ✕</span>`).join('')
       :'<span style="font-size:.8rem;color:var(--muted);">배정된 학생 없음</span>';
     return `<div class="subject-card">
       <div class="subject-card-header">
@@ -835,31 +846,62 @@ function renderSubjectCards(){
     </div>`;
   }).join('');
 }
-window.viewSubjectPortfolio=async function(name){
+async function removeFromSubject(name,id){
+  subjectMap[name]=subjectMap[name].filter(s=>s!==id);
+  await setDoc(doc(db,'subjects',name),{members:subjectMap[name]});
+  renderSubjectCards();
+}
+async function deleteSubject(name){
+  if(!confirm(`"${name}" 과목을 삭제할까요?`))return;
+  await deleteDoc(doc(db,'subjects',name));
+  delete subjectMap[name]; renderSubjectCards();
+}
+async function viewSubjectPortfolio(name){
   const ids=subjectMap[name];
-  $('subjectPortfolioTitle').textContent=`📚 ${name} — 과목 포트폴리오`;
-  const content=$('subjectPortfolioContent');
+  document.getElementById('subjectPortfolioTitle').textContent=`📚 ${name} — 과목 포트폴리오`;
+  const content=document.getElementById('subjectPortfolioContent');
   content.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px;">불러오는 중...</p>';
   openModal('subjectPortfolioModal');
-  if(!ids.length){content.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px;">배정된 학생이 없어요.</p>';return;}
   for(const id of ids) await loadPortfolio(id);
-  content.innerHTML=ids.map(id=>{
-    const recs=portfolios[id]||[];
-    const cards=recs.length?recs.map(r=>r.type==='python'?renderPyCard(r):renderTextCard(r)).join('')
-      :`<p style="color:var(--muted);font-size:.85rem;padding:8px 0;">기록 없음</p>`;
-    return `<div style="margin-bottom:20px;">
-      <div style="font-weight:700;font-size:.9rem;color:var(--primary);margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--primary-light);">
-        🎓 ${id} · ${STUDENTS[id]?.name||''} <span style="font-weight:400;color:var(--muted);font-size:.78rem;">— ${recs.length}개 기록</span>
-      </div>${cards}</div>`;
-  }).join('');
-  setTimeout(()=>document.querySelectorAll('#subjectPortfolioContent pre code').forEach(el=>hljs.highlightElement(el)),100);
-};
+  if(!ids.length){content.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px;">배정된 학생이 없어요.</p>';}
+  else{
+    content.innerHTML=ids.map(id=>{
+      const recs=portfolios[id]||[];
+      const cards=recs.length?recs.map(r=>r.type==='python'?renderPyCard(r):renderTextCard(r)).join('')
+        :`<p style="color:var(--muted);font-size:.85rem;padding:8px 0;">기록 없음</p>`;
+      return `<div style="margin-bottom:20px;">
+        <div style="font-weight:700;font-size:.9rem;color:var(--primary);margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--primary-light);">
+          🎓 ${id} · ${STUDENTS[id]?.name||''} <span style="font-weight:400;color:var(--muted);font-size:.78rem;">— ${recs.length}개 기록</span>
+        </div>${cards}</div>`;
+    }).join('');
+    setTimeout(()=>document.querySelectorAll('#subjectPortfolioContent pre code').forEach(el=>hljs.highlightElement(el)),100);
+  }
+}
+window.doAddSubject=doAddSubject; window.openAssign=openAssign; window.toggleAssign=toggleAssign;
+window.doAssign=doAssign; window.removeFromSubject=removeFromSubject;
+window.deleteSubject=deleteSubject; window.viewSubjectPortfolio=viewSubjectPortfolio;
+
+// ── 비밀번호 변경 ──
+async function doChangePw(){
+  const cur=document.getElementById('pwCurrent').value;
+  const nw=document.getElementById('pwNew').value;
+  const cf=document.getElementById('pwConfirm').value;
+  const err=document.getElementById('pwErr');
+  if(STUDENTS[currentUser].pw!==cur){err.textContent='현재 비밀번호가 맞지 않습니다.';return;}
+  if(!nw||nw.length<4){err.textContent='새 비밀번호는 4자리 이상이어야 합니다.';return;}
+  if(nw!==cf){err.textContent='새 비밀번호가 일치하지 않습니다.';return;}
+  STUDENTS[currentUser].pw=nw;
+  await setDoc(doc(db,'students',currentUser),STUDENTS[currentUser]);
+  closeModal('pwModal'); alert('✅ 비밀번호가 변경됐어요!');
+}
+window.doChangePw=doChangePw;
 
 // ── 유틸 ──
 function fmtDate(d){const dt=new Date(d);return `${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일`;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-window.openLightbox=function(src){$('lightboxImg').src=src;$('lightbox').classList.add('open');};
-window.closeLightbox=function(){$('lightbox').classList.remove('open');};
+function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+window.openLightbox=openLightbox; window.closeLightbox=closeLightbox;
 
 init();
 </script>
